@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Easy Quiz</title>
+
+  <!-- Link to Google Fonts for Tamil font -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Noto Sans Tamil', Arial, sans-serif;
+      background-color: #f0f0f0; /* Light Gray */
+      margin: 0;
+      padding: 0;
+    }
+
+    .quiz-container {
+      width: 80%;
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #007BFF; /* Sky Blue */
+    }
+
+    #question-container {
+      margin-bottom: 20px;
+    }
+
+    .option-button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      background-color: #D2B48C; /* Sandal Color (Tan) */
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: background-color 0.3s;
+    }
+
+    .option-button:hover {
+      background-color: #c2a276; /* Slightly darker sandal color */
+    }
+
+    .correct {
+      background-color: #4CAF50; /* Olive Green */
+      color: white;
+    }
+
+    .incorrect {
+      background-color: #FF7043; /* Orange */
+      color: white;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF; /* Sky Blue */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.2em;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #005BB5; /* Darker Sky Blue */
+    }
+
+    #score {
+      font-size: 1.2em;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    #final-results {
+      margin-top: 30px;
+      font-size: 1.2em;
+      color: #333;
+      display: none;
+      text-align: left;
+    }
+
+    .result-item {
+      margin-bottom: 10px;
+      font-size: 1em;
+      padding: 5px;
+      border-left: 4px solid #ccc;
+    }
+
+    .result-item.correct {
+      border-left-color: #4CAF50; /* Olive Green */
+    }
+
+    .result-item.incorrect {
+      border-left-color: #FF7043; /* Orange */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <h1>??????? Easy Quiz</h1>
+    <div id="question-container">
+      <p id="question-text"></p>
+      <div id="options-container"></div>
+    </div>
+    <button id="next-button" onclick="nextQuestion()" disabled>Next</button>
+    <p id="score">Score: 0</p>
+
+    <div id="final-results">
+      <h2>Final Results :</h2>
+      <div id="result-details"></div>
+    </div>
+  </div>
+
+  <script>
+   const quizData = [
+    {
+      "question": "????????????? ???? ??????????? ???????? ???? ?????????? ?????? ?????????? ???????????",
+      "options": [
+        "??????????? ?? ???? ?????????",
+        "??????? ??????? ???????",
+        "???????? ???? ?????????",
+        "????? ???? ?????????"
+      ],
+      "correct": 1,
+      "additionalData": "Explanation"
+    },
+    {
+      "question": "?????? ?????????? ???? ????",
+      "options": [
+        "???????????",
+        "????????????",
+        "??????? ????"
+      ],
+      "correct": 1,
+      "additionalData": "Explanation"
+    },
+    {
+      "question": "????????????? ????????? \"??? ?????\" ???? ????? ??????????",
+      "options": [
+        "2017",
+        "2018",
+        "2019",
+        "2020"
+      ],
+      "correct": 1,
+      "additionalData": "Explanation"
+    },
+    {
+      "question": "????????????? ???????? ?????",
+      "options": [
+        "??????",
+        "?????? ????",
+        "????????????",
+        "??????"
+      ],
+      "correct": 2,
+      "additionalData": "Explanation"
+    },
+    {
+      "question": "\"???????????\" ???? ???? ????????? ?????",
+      "options": [
+        "??????",
+        "???????????",
+        "????????",
+        "????????????"
+      ],
+      "correct": 0,
+      "additionalData": "Explanation"
+    }
+  ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answers = [];
+
+    function displayQuestion() {
+      const currentQuestion = quizData[currentQuestionIndex];
+
+      // Display the question text
+      document.getElementById("question-text").innerText = currentQuestion.question;
+
+      // Display the options
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = ""; // Clear any previous options
+
+      currentQuestion.options.forEach((option, index) => {
+        const optionButton = document.createElement("button");
+        optionButton.classList.add("option-button");
+        optionButton.innerText = option;
+        optionButton.onclick = () => checkAnswer(index);
+        optionsContainer.appendChild(optionButton);
+      });
+    }
+
+    function checkAnswer(selectedIndex) {
+      const currentQuestion = quizData[currentQuestionIndex];
+      const optionButtons = document.querySelectorAll(".option-button");
+
+      // Disable all options after selection
+      optionButtons.forEach(button => button.disabled = true);
+
+      if (selectedIndex === currentQuestion.correct) {
+        score++;
+        optionButtons[selectedIndex].classList.add("correct");
+      } else {
+        optionButtons[selectedIndex].classList.add("incorrect");
+      }
+
+      // Store the result for final display
+      answers.push({
+        question: currentQuestion.question,
+        correctAnswer: currentQuestion.options[currentQuestion.correct],
+        userAnswer: currentQuestion.options[selectedIndex],
+        isCorrect: selectedIndex === currentQuestion.correct
+      });
+
+      document.getElementById("score").innerText = `Score: ${score}`;
+      document.getElementById("next-button").disabled = false;
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < quizData.length) {
+        displayQuestion();
+        document.getElementById("next-button").disabled = true;
+      } else {
+        displayFinalResults();
+      }
+    }
+
+    function displayFinalResults() {
+      document.getElementById("final-results").style.display = "block";
+      const resultDetails = document.getElementById("result-details");
+      resultDetails.innerHTML = "";
+
+      answers.forEach(answer => {
+        const resultItem = document.createElement("div");
+        resultItem.classList.add("result-item");
+
+        if (answer.isCorrect) {
+          resultItem.classList.add("correct");
+          resultItem.innerText = `${answer.question} - Correct! (${answer.correctAnswer})`;
+        } else {
+          resultItem.classList.add("incorrect");
+          resultItem.innerText = `${answer.question} - Incorrect. Your answer: ${answer.userAnswer} (Correct answer: ${answer.correctAnswer})`;
+        }
+
+        resultDetails.appendChild(resultItem);
+      });
+
+      document.getElementById("next-button").style.display = "none";
+    }
+
+    window.onload = function() {
+      displayQuestion();
+    };
+  </script>
+
+</body>
+</html>
