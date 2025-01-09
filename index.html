@@ -1,98 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Product Details</title>
+    <title>Product Upload Form</title>
     <style>
-      /* Add your CSS styling here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            display: inline-block;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #005BB5;
+        }
+
+        .output {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #555;
+        }
     </style>
-  </head>
-  <body>
-    <h2>Upload Product Details and Image</h2>
-    <form id="uploadForm">
-      <div>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-      </div>
-      <div>
-        <label for="mrp">MRP:</label>
-        <input type="number" id="mrp" name="mrp" step="0.01" required>
-      </div>
-      <div>
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" step="0.01" required>
-      </div>
-      <div>
-        <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" required>
-      </div>
-      <div>
-        <label for="totalPrice">Total Price:</label>
-        <input type="number" id="totalPrice" name="totalPrice" step="0.01" required>
-      </div>
-      <div>
-        <label for="mrpTotalPrice">MRP Total Price:</label>
-        <input type="number" id="mrpTotalPrice" name="mrpTotalPrice" step="0.01" required>
-      </div>
-      <div>
-        <label for="remarks">Remarks:</label>
-        <textarea id="remarks" name="remarks" rows="3" required></textarea>
-      </div>
-      <div>
-        <label for="imageFile">Choose an image to upload:</label>
-        <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
-        <div id="file-name"></div>
-      </div>
-      <button type="submit">Upload</button>
-    </form>
-    <div id="output"></div>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Upload Product Details and Image</h2>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mrp">MRP:</label>
+                <input type="number" id="mrp" name="mrp" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" required>
+            </div>
+
+            <div class="form-group">
+                <label for="totalPrice">Total Price:</label>
+                <input type="number" id="totalPrice" name="totalPrice" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mrpTotalPrice">MRP Total Price:</label>
+                <input type="number" id="mrpTotalPrice" name="mrpTotalPrice" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="remarks">Remarks:</label>
+                <textarea id="remarks" name="remarks" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="imageFile">Product Image:</label><br>
+                <button type="button" onclick="selectFile()">Select from Files</button>
+                <button type="button" onclick="captureImage()">Capture with Camera</button>
+                <input type="file" id="imageFile" name="imageFile" accept="image/*" style="display:none;" required onchange="displayFileName()">
+                <div id="fileNameDisplay" class="file-name"></div>
+            </div>
+
+            <button type="submit">Upload</button>
+        </form>
+
+        <div id="output" class="output"></div>
+    </div>
 
     <script>
-      document.getElementById("uploadForm").addEventListener("submit", function(event) {
-        event.preventDefault();
+        const scriptUrl = "https://script.google.com/macros/s/AKfycby28n_0Xnvps5nLa6C-tKvqbsqh8wZstRnqmAAww53CLNRrZxyd5KGARMSzSt8r3lmmlg/exec";
 
-        // Gather form data
-        const form = event.target;
-        const formData = new FormData(form);
+        function selectFile() {
+            document.getElementById('imageFile').removeAttribute('capture');
+            document.getElementById('imageFile').click();
+        }
 
-        // Create a FileReader to read the file as base64
-        const reader = new FileReader();
-        const file = formData.get('imageFile');
+        function captureImage() {
+            document.getElementById('imageFile').setAttribute('capture', 'camera');
+            document.getElementById('imageFile').click();
+        }
 
-        reader.onload = function(e) {
-          const base64Image = e.target.result.split(',')[1]; // Get base64 image string
+        function displayFileName() {
+            const fileInput = document.getElementById('imageFile');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            const fileName = fileInput.files[0].name;
+            fileNameDisplay.textContent = "Selected file: " + fileName;
+        }
 
-          const data = {
-            name: formData.get('name'),
-            mrp: formData.get('mrp'),
-            price: formData.get('price'),
-            quantity: formData.get('quantity'),
-            totalPrice: formData.get('totalPrice'),
-            mrpTotalPrice: formData.get('mrpTotalPrice'),
-            remarks: formData.get('remarks'),
-            imageFile: base64Image
-          };
+        document.getElementById('uploadForm').onsubmit = function(event) {
+            event.preventDefault();
 
-          // Make the POST request to Google Apps Script
-          fetch('https://script.google.com/macros/s/AKfycbzxbRanejEf9n6-z3xLnf_-7nqnZeRlXYSduw0GZluwI79lrZqgQ9KH_NZ2ohM8ZvH9/exec', {
-            method: 'POST',
-            body: JSON.stringify(data), // Send data as JSON
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-          .then(response => response.json())
-          .then(responseData => {
-            document.getElementById("output").innerHTML = `File uploaded successfully! <a href="${responseData.fileUrl}" target="_blank">View Image</a>`;
-          })
-          .catch(error => {
-            document.getElementById("output").innerHTML = `Error: ${error.message}`;
-          });
+            // Prepare form data
+            const formData = {
+                name: document.getElementById('name').value,
+                mrp: document.getElementById('mrp').value,
+                price: document.getElementById('price').value,
+                quantity: document.getElementById('quantity').value,
+                totalPrice: document.getElementById('totalPrice').value,
+                mrpTotalPrice: document.getElementById('mrpTotalPrice').value,
+                remarks: document.getElementById('remarks').value
+            };
+
+            const imageFile = document.getElementById('imageFile').files[0];
+            if (!imageFile) {
+                document.getElementById('output').innerHTML = "Please select an image to upload.";
+                document.getElementById('output').classList.add('error');
+                return;
+            }
+
+            // Convert image file to base64
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64Image = reader.result.split(',')[1];
+                formData.imageFile = base64Image;
+
+                // Disable the upload button and show loading text
+                const uploadButton = document.querySelector("button[type='submit']");
+                uploadButton.disabled = true;
+                uploadButton.textContent = "Uploading...";
+
+                // Send data to the Apps Script backend
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ formData: formData })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.fileUrl) {
+                        document.getElementById('output').innerHTML = `Image uploaded successfully! <a href="${data.fileUrl}" target="_blank">View Image</a>`;
+                    } else {
+                        document.getElementById('output').innerHTML = `Error: ${data.error}`;
+                        document.getElementById('output').classList.add('error');
+                    }
+                    uploadButton.disabled = false;
+                    uploadButton.textContent = "Upload";
+                })
+                .catch(error => {
+                    document.getElementById('output').innerHTML = 'Error: ' + error.message;
+                    document.getElementById('output').classList.add('error');
+                    uploadButton.disabled = false;
+                    uploadButton.textContent = "Upload";
+                });
+            };
+
+            reader.readAsDataURL(imageFile);
         };
-
-        reader.readAsDataURL(file);
-      });
     </script>
-  </body>
+</body>
 </html>
