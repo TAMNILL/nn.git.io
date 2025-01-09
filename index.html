@@ -1,279 +1,285 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Easy Quiz</title>
-
-  <!-- Link to Google Fonts for Tamil font -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      font-family: 'Noto Sans Tamil', Arial, sans-serif;
-      background-color: #f0f0f0; /* Light Gray */
-      margin: 0;
-      padding: 0;
-    }
-
-    .quiz-container {
-      width: 80%;
-      max-width: 600px;
-      margin: 50px auto;
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-    h1 {
-      color: #333;
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      color: #007BFF; /* Sky Blue */
-    }
-
-    #question-container {
-      margin-bottom: 20px;
-    }
-
-    .option-button {
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      background-color: #D2B48C; /* Sandal Color (Tan) */
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1.1em;
-      transition: background-color 0.3s;
-    }
-
-    .option-button:hover {
-      background-color: #c2a276; /* Slightly darker sandal color */
-    }
-
-    .correct {
-      background-color: #4CAF50; /* Olive Green */
-      color: white;
-    }
-
-    .incorrect {
-      background-color: #FF7043; /* Orange */
-      color: white;
-    }
-
-    button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      background-color: #007BFF; /* Sky Blue */
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 1.2em;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #005BB5; /* Darker Sky Blue */
-    }
-
-    #score {
-      font-size: 1.2em;
-      margin-top: 20px;
-      color: #333;
-    }
-
-    #final-results {
-      margin-top: 30px;
-      font-size: 1.2em;
-      color: #333;
-      display: none;
-      text-align: left;
-    }
-
-    .result-item {
-      margin-bottom: 10px;
-      font-size: 1em;
-      padding: 5px;
-      border-left: 4px solid #ccc;
-    }
-
-    .result-item.correct {
-      border-left-color: #4CAF50; /* Olive Green */
-    }
-
-    .result-item.incorrect {
-      border-left-color: #FF7043; /* Orange */
-    }
-  </style>
-</head>
-<body>
-
-  <div class="quiz-container">
-    <h1>கம்பளம் Easy Quiz</h1>
-    <div id="question-container">
-      <p id="question-text"></p>
-      <div id="options-container"></div>
-    </div>
-    <button id="next-button" onclick="nextQuestion()" disabled>Next</button>
-    <p id="score">Score: 0</p>
-
-    <div id="final-results">
-      <h2>Final Results :</h2>
-      <div id="result-details"></div>
-    </div>
-  </div>
-
-  <script>
-   const quizData = [
-    {
-      "question": "தமிழ்நாட்டில் உள்ள காஞ்சிபுரம் மாவட்டம் எந்த புகழ்பெற்ற கைவினை தொழிலுக்கு பிரபலமானது?",
-      "options": [
-        "செம்பருத்தி பூ நெய் தயாரிப்பு",
-        "கைத்தறி பருத்தி கம்பளம்",
-        "வெண்சாதி நெய் தயாரிப்பு",
-        "பட்டு துணி தயாரிப்பு"
-      ],
-      "correct": 1,
-      "additionalData": "Explanation"
-    },
-    {
-      "question": "உலகின் மிகப்பெரிய தீவு எது?",
-      "options": [
-        "ஆஸ்திரேலியா",
-        "கிரின்லாந்து",
-        "பூர்வீக தீவு"
-      ],
-      "correct": 1,
-      "additionalData": "Explanation"
-    },
-    {
-      "question": "தமிழ்நாட்டில் பரபரப்பான \"கஜா புயல்\" எந்த ஆண்டு தாக்கியது?",
-      "options": [
-        "2017",
-        "2018",
-        "2019",
-        "2020"
-      ],
-      "correct": 1,
-      "additionalData": "Explanation"
-    },
-    {
-      "question": "திருக்குறளின் ஆசிரியர் யார்?",
-      "options": [
-        "சங்கரா",
-        "புலவர் பரணி",
-        "திருவள்ளுவர்",
-        "கபிலர்"
-      ],
-      "correct": 2,
-      "additionalData": "Explanation"
-    },
-    {
-      "question": "\"புத்தகங்கள்\" என்ற நூல் எழுதியவர் யார்?",
-      "options": [
-        "சுஜாதா",
-        "ரவிக்குமார்",
-        "கமலஹாசன்",
-        "விக்தேஷ்வரன்"
-      ],
-      "correct": 0,
-      "additionalData": "Explanation"
-    }
-  ];
-
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let answers = [];
-
-    function displayQuestion() {
-      const currentQuestion = quizData[currentQuestionIndex];
-
-      // Display the question text
-      document.getElementById("question-text").innerText = currentQuestion.question;
-
-      // Display the options
-      const optionsContainer = document.getElementById("options-container");
-      optionsContainer.innerHTML = ""; // Clear any previous options
-
-      currentQuestion.options.forEach((option, index) => {
-        const optionButton = document.createElement("button");
-        optionButton.classList.add("option-button");
-        optionButton.innerText = option;
-        optionButton.onclick = () => checkAnswer(index);
-        optionsContainer.appendChild(optionButton);
-      });
-    }
-
-    function checkAnswer(selectedIndex) {
-      const currentQuestion = quizData[currentQuestionIndex];
-      const optionButtons = document.querySelectorAll(".option-button");
-
-      // Disable all options after selection
-      optionButtons.forEach(button => button.disabled = true);
-
-      if (selectedIndex === currentQuestion.correct) {
-        score++;
-        optionButtons[selectedIndex].classList.add("correct");
-      } else {
-        optionButtons[selectedIndex].classList.add("incorrect");
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: 'Noto Sans Tamil', Arial, sans-serif;
+        background-color: #f0f0f0; /* Light Gray */
+        margin: 0;
+        padding: 0;
+        height: 100vh; /* Full screen height */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
       }
 
-      // Store the result for final display
-      answers.push({
-        question: currentQuestion.question,
-        correctAnswer: currentQuestion.options[currentQuestion.correct],
-        userAnswer: currentQuestion.options[selectedIndex],
-        isCorrect: selectedIndex === currentQuestion.correct
-      });
-
-      document.getElementById("score").innerText = `Score: ${score}`;
-      document.getElementById("next-button").disabled = false;
-    }
-
-    function nextQuestion() {
-      currentQuestionIndex++;
-
-      if (currentQuestionIndex < quizData.length) {
-        displayQuestion();
-        document.getElementById("next-button").disabled = true;
-      } else {
-        displayFinalResults();
+      h2 {
+        color: #007BFF; /* Sky Blue */
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        text-align: center;
       }
-    }
 
-    function displayFinalResults() {
-      document.getElementById("final-results").style.display = "block";
-      const resultDetails = document.getElementById("result-details");
-      resultDetails.innerHTML = "";
+      .form-container {
+        width: 100%;
+        height: 100vh; /* Full screen height */
+        max-width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
 
-      answers.forEach(answer => {
-        const resultItem = document.createElement("div");
-        resultItem.classList.add("result-item");
+      .form-group-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
 
-        if (answer.isCorrect) {
-          resultItem.classList.add("correct");
-          resultItem.innerText = `${answer.question} - Correct! (${answer.correctAnswer})`;
-        } else {
-          resultItem.classList.add("incorrect");
-          resultItem.innerText = `${answer.question} - Incorrect. Your answer: ${answer.userAnswer} (Correct answer: ${answer.correctAnswer})`;
+      .form-group {
+        width: 48%;
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        font-size: 1.1em;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+      }
+
+      .file-name {
+        margin-top: 10px;
+        color: #333;
+      }
+
+      #uploadBtn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: #007BFF; /* Sky Blue */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.2em;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+      }
+
+      #uploadBtn:disabled {
+        background-color: #aaa;
+        cursor: not-allowed;
+      }
+
+      #uploadBtn:hover:not(:disabled) {
+        background-color: #005BB5; /* Darker Sky Blue */
+      }
+
+      #output {
+        margin-top: 20px;
+        font-size: 1.2em;
+        color: #333;
+      }
+
+      .error {
+        color: #FF7043; /* Orange */
+      }
+
+      /* Mobile Responsiveness */
+      @media (max-width: 768px) {
+        .form-group-row {
+          flex-direction: column;
         }
 
-        resultDetails.appendChild(resultItem);
-      });
+        .form-group {
+          width: 100%;
+        }
 
-      document.getElementById("next-button").style.display = "none";
-    }
+        h2 {
+          font-size: 2em;
+        }
 
-    window.onload = function() {
-      displayQuestion();
-    };
-  </script>
+        .form-container {
+          padding: 15px;
+          width: 90%;
+          max-width: 100%;
+        }
 
-</body>
+        #uploadBtn {
+          font-size: 1.2em;
+        }
+
+        .file-name {
+          font-size: 1em;
+        }
+
+        #output {
+          font-size: 1.2em;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h2 {
+          font-size: 1.5em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+          padding: 8px;
+          font-size: 0.9em;
+        }
+
+        #uploadBtn {
+          font-size: 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Upload Product Details and Image</h2>
+    <div class="form-container">
+      <form id="uploadForm" enctype="multipart/form-data">
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="mrp">MRP:</label>
+            <input type="number" id="mrp" name="mrp" step="0.01" required>
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" required>
+          </div>
+        </div>
+
+        <div class="price-remarks-row">
+          <div class="price-sales-value">
+            <div class="form-group">
+              <label for="totalPrice">Total Price:</label>
+              <input type="number" id="totalPrice" name="totalPrice" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+              <label for="mrpTotalPrice">MRP Total Price:</label>
+              <input type="number" id="mrpTotalPrice" name="mrpTotalPrice" step="0.01" required>
+            </div>
+          </div>
+
+          <div class="remarks">
+            <div class="form-group">
+              <label for="remarks">Remarks:</label>
+              <textarea id="remarks" name="remarks" rows="3" required></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group image-upload">
+          <label for="imageFile">Choose an image to upload:</label>
+          <button type="button" onclick="selectFile()">Select from Files</button>
+          <button type="button" onclick="captureImage()">Capture with Camera</button>
+          <input type="file" id="imageFile" name="imageFile" accept="image/*" style="display:none;" required onchange="displayFileName()">
+        </div>
+        <div id="fileNameDisplay" class="file-name"></div>
+
+        <input type="submit" id="uploadBtn" value="Upload">
+      </form>
+
+      <div id="output" class="output"></div>
+    </div>
+
+    <script>
+      function selectFile() {
+        document.getElementById('imageFile').removeAttribute('capture');
+        document.getElementById('imageFile').click();
+      }
+
+      function captureImage() {
+        document.getElementById('imageFile').setAttribute('capture', 'camera');
+        document.getElementById('imageFile').click();
+      }
+
+      function displayFileName() {
+        var fileInput = document.getElementById('imageFile');
+        var fileNameDisplay = document.getElementById('fileNameDisplay');
+        var fileName = fileInput.files[0].name;
+        fileNameDisplay.textContent = "Selected file: " + fileName;
+      }
+
+      document.getElementById('uploadForm').onsubmit = function(event) {
+        event.preventDefault();
+        
+        var formData = {
+          name: document.getElementById('name').value,
+          mrp: document.getElementById('mrp').value,
+          price: document.getElementById('price').value,
+          quantity: document.getElementById('quantity').value,
+          totalPrice: document.getElementById('totalPrice').value,
+          mrpTotalPrice: document.getElementById('mrpTotalPrice').value,
+          remarks: document.getElementById('remarks').value,
+        };
+
+        var imageFile = document.getElementById('imageFile').files[0];
+        
+        if (!imageFile) {
+          document.getElementById('output').innerHTML = "Please select an image to upload.";
+          document.getElementById('output').classList.add('error');
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          var base64Image = reader.result.split(',')[1];
+          formData.imageFile = base64Image;
+
+          document.getElementById("uploadBtn").disabled = true;
+          document.getElementById("uploadBtn").value = "Uploading...";
+
+          google.script.run
+            .withSuccessHandler(function(fileUrl) {
+              document.getElementById('output').innerHTML = 'Image uploaded successfully! <a href="' + fileUrl + '" target="_blank">View Image</a>';
+              document.getElementById('output').classList.remove('error');
+              document.getElementById("uploadBtn").disabled = false;
+              document.getElementById("uploadBtn").value = "Upload";
+            })
+            .withFailureHandler(function(error) {
+              document.getElementById('output').innerHTML = 'Error uploading file: ' + error;
+              document.getElementById('output').classList.add('error');
+              document.getElementById("uploadBtn").disabled = false;
+              document.getElementById("uploadBtn").value = "Upload";
+            })
+            .uploadImage(formData);
+        };
+
+        reader.readAsDataURL(imageFile);
+      }
+    </script>
+  </body>
 </html>
