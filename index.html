@@ -180,7 +180,7 @@
             formData.imageFile = reader.result.split(',')[1]; // Get base64 string without data URI part
 
             // Send the data to Google Apps Script (replace with your Apps Script URL)
-            fetch('https://script.google.com/macros/s/AKfycbwGHi-QnxSuMRTN6NuMm7n3CBj2TcT1KlyY2vfTaRbLe1n0qjioX4Zy0PcvtrcXbM5M8Q/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbxU4l0VZjFNSfOea0u2j9aDmEA_5VeQ6myW5tsvrthB6-KeU81Tor3M6V-FAGAsxNktGg/exec', {
               method: 'POST',
               body: JSON.stringify(formData),
               headers: {
