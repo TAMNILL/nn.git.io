@@ -178,7 +178,7 @@
         document.getElementById("uploadBtn").disabled = true;
         document.getElementById("uploadBtn").value = "Uploading...";
 
-        fetch('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL', {
+        fetch('https://script.google.com/macros/s/AKfycbzRAxavO11ka8UezwB-jhb0amxZhMy5fVGFJEJZW_hYerOmD9CtO_GCi1yxWGYFIeIE5A/exec', {
           method: 'POST',
           body: JSON.stringify(formData),
           headers: {
