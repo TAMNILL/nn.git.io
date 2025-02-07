@@ -86,10 +86,16 @@
             // Clear any previous error message
             document.getElementById('error-message').textContent = "";
 
+            // Log form data to help with debugging
+            console.log("Form data:", { name, age, imageFile });
+
             // Convert image to base64 string for submission
             var reader = new FileReader();
             reader.onload = function(event) {
                 var imageBase64 = event.target.result.split(',')[1];  // Extract base64 string
+
+                // Log the base64 string length for debugging (don't log large strings)
+                console.log("Base64 Image String Length: ", imageBase64.length);
 
                 // Send data to Google Apps Script using fetch
                 var requestData = {
@@ -97,6 +103,9 @@
                     age: age,
                     imageBase64: imageBase64
                 };
+
+                // Log the request data being sent
+                console.log("Sending Data:", requestData);
 
                 fetch('https://script.google.com/macros/s/AKfycbwS7X3c9hcn7L09fpPaQpE-O_Aa47fPQf4hHbJpe2Q36KP3nXi2Wj_o7qW1IOFt6JsedQ/exec', {
                     method: 'POST',
@@ -107,6 +116,8 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Response from server:", data);  // Log the response for better debugging
+
                     if (data.success) {
                         alert("Data submitted successfully!");
                     } else {
