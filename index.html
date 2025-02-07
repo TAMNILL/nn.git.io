@@ -189,7 +189,7 @@
           document.getElementById("uploadBtn").disabled = true;
           document.getElementById("uploadBtn").value = "Uploading...";
 
-          fetch('YOUR_SCRIPT_URL', {  // Replace YOUR_SCRIPT_URL with the actual Google Apps Script URL
+          fetch('https://script.google.com/macros/s/AKfycbxX_lN-K19B3B81nkcf62jTVGdnx1dT4TUMEKU7ADkzVKj6a5jWnxGWYMPeDSP0RiaM5A/exec', {  // Replace YOUR_SCRIPT_URL with the actual Google Apps Script URL
             method: 'POST',
             body: JSON.stringify(formData),
             headers: {
