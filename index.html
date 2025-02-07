@@ -1,79 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Sheets Form</title>
-  <style>
-    /* Add CSS styles here */
-    body {
-      font-family: Arial, sans-serif;
-    }
-    .form-container {
-      width: 300px;
-      margin: 0 auto;
-    }
-    label {
-      font-size: 14px;
-      margin: 10px 0 5px;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Product Details & Image</title>
+    <style>
+      /* Your existing styles here */
+      body {
+        font-family: 'Noto Sans Tamil', Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }
 
-  <div class="form-container">
-    <h2>Contact Form</h2>
-    <form id="contactForm">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" required>
+      .form-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
 
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
+      h2 {
+        color: #007bff;
+        font-size: 2em;
+        margin-bottom: 20px;
+      }
 
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="4" required></textarea>
+      .form-group-row {
+        display: flex;
+        flex-wrap: wrap;
+      }
 
-      <button type="submit">Submit</button>
-    </form>
-  </div>
+      .form-group {
+        width: 50%;
+        padding: 10px;
+      }
 
-  <script>
-    // Replace with your web app URL from Apps Script
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxNph-18S6S7PyWwuhY4jeBsUvCsl5EyE5UPujRzTdfur9R9muLJIg0KOLhem9_m8Ftgg/exec';
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
 
-    const form = document.getElementById('contactForm');
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      
-      const formData = new FormData(form);
-      
-      fetch(scriptURL, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.text())
-      .then(result => alert('Success: ' + result))
-      .catch(error => console.error('Error:', error));
-    });
-  </script>
+      .image-upload button {
+        margin: 5px;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-</body>
+      #uploadBtn {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      .output {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border-radius: 5px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>Upload Product Details and Image</h2>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="mrp">MRP:</label>
+            <input type="number" id="mrp" name="mrp" step="0.01" required />
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" required />
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" required />
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="totalPrice">Total Price:</label>
+            <input type="number" id="totalPrice" name="totalPrice" step="0.01" required />
+          </div>
+
+          <div class="form-group">
+            <label for="mrpTotalPrice">MRP Total Price:</label>
+            <input type="number" id="mrpTotalPrice" name="mrpTotalPrice" step="0.01" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="remarks">Remarks:</label>
+          <textarea id="remarks" name="remarks" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group image-upload">
+          <label for="imageFile">Choose an image to upload:</label>
+          <button type="button" onclick="selectFile()">Select from Files</button>
+          <button type="button" onclick="captureImage()">Capture with Camera</button>
+          <input
+            type="file"
+            id="imageFile"
+            name="imageFile"
+            accept="image/*"
+            style="display:none;"
+            onchange="displayFileName()"
+          />
+        </div>
+        <div id="fileNameDisplay" class="file-name"></div>
+
+        <input type="submit" id="uploadBtn" value="Upload" />
+      </form>
+
+      <div id="output" class="output"></div>
+    </div>
+
+    <script>
+      function selectFile() {
+        document.getElementById('imageFile').removeAttribute('capture');
+        document.getElementById('imageFile').click();
+      }
+
+      function captureImage() {
+        document.getElementById('imageFile').setAttribute('capture', 'camera');
+        document.getElementById('imageFile').click();
+      }
+
+      function displayFileName() {
+        var fileInput = document.getElementById('imageFile');
+        var fileNameDisplay = document.getElementById('fileNameDisplay');
+        var fileName = fileInput.files[0].name;
+        fileNameDisplay.textContent = "Selected file: " + fileName;
+      }
+
+      document.getElementById('uploadForm').onsubmit = function (event) {
+        event.preventDefault();
+
+        var formData = {
+          name: document.getElementById('name').value,
+          mrp: document.getElementById('mrp').value,
+          price: document.getElementById('price').value,
+          quantity: document.getElementById('quantity').value,
+          totalPrice: document.getElementById('totalPrice').value,
+          mrpTotalPrice: document.getElementById('mrpTotalPrice').value,
+          remarks: document.getElementById('remarks').value,
+        };
+
+        var imageFile = document.getElementById('imageFile').files[0];
+
+        if (!imageFile) {
+          document.getElementById('output').innerHTML = "Please select an image to upload.";
+          document.getElementById('output').style.display = "block";
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          var base64Image = reader.result.split(',')[1];
+          formData.imageFile = base64Image;
+
+          document.getElementById("uploadBtn").disabled = true;
+          document.getElementById("uploadBtn").value = "Uploading...";
+
+          fetch('YOUR_SCRIPT_URL', {  // Replace YOUR_SCRIPT_URL with the actual Google Apps Script URL
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                document.getElementById('output').innerHTML =
+                  'Image uploaded successfully! URL: ' + data.fileUrl;
+                document.getElementById('uploadForm').reset();
+              } else {
+                document.getElementById('output').innerHTML = 'Error: ' + data.error;
+              }
+              document.getElementById('output').style.display = "block";
+              document.getElementById("uploadBtn").disabled = false;
+              document.getElementById("uploadBtn").value = "Upload";
+            })
+            .catch((error) => {
+              document.getElementById('output').innerHTML = 'Error: ' + error.message;
+              document.getElementById('output').style.display = "block";
+              document.getElementById("uploadBtn").disabled = false;
+              document.getElementById("uploadBtn").value = "Upload";
+            });
+        };
+
+        reader.readAsDataURL(imageFile);
+      };
+    </script>
+  </body>
 </html>
