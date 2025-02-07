@@ -141,91 +141,70 @@
       <div id="output" class="output"></div>
     </div>
 
-    <script>
-      function selectFile() {
-        document.getElementById('imageFile').removeAttribute('capture');
-        document.getElementById('imageFile').click();
-      }
+ <script>
+  // Handle form submission
+  document.getElementById('uploadForm').onsubmit = function (event) {
+    event.preventDefault();
 
-      function captureImage() {
-        document.getElementById('imageFile').setAttribute('capture', 'camera');
-        document.getElementById('imageFile').click();
-      }
+    var formData = {
+      name: document.getElementById('name').value,
+      mrp: document.getElementById('mrp').value,
+      price: document.getElementById('price').value,
+      quantity: document.getElementById('quantity').value,
+      totalPrice: document.getElementById('totalPrice').value,
+      mrpTotalPrice: document.getElementById('mrpTotalPrice').value,
+      remarks: document.getElementById('remarks').value,
+    };
 
-      function displayFileName() {
-        var fileInput = document.getElementById('imageFile');
-        var fileNameDisplay = document.getElementById('fileNameDisplay');
-        var fileName = fileInput.files[0].name;
-        fileNameDisplay.textContent = "Selected file: " + fileName;
-      }
+    var imageFile = document.getElementById('imageFile').files[0];
 
-      // Handle form submission
-      document.getElementById('uploadForm').onsubmit = function (event) {
-        event.preventDefault();
+    if (!imageFile) {
+      document.getElementById('output').innerHTML = "Please select an image to upload.";
+      document.getElementById('output').style.display = "block";
+      return;
+    }
 
-        var formData = {
-          name: document.getElementById('name').value,
-          mrp: document.getElementById('mrp').value,
-          price: document.getElementById('price').value,
-          quantity: document.getElementById('quantity').value,
-          totalPrice: document.getElementById('totalPrice').value,
-          mrpTotalPrice: document.getElementById('mrpTotalPrice').value,
-          remarks: document.getElementById('remarks').value,
-        };
+    var reader = new FileReader();
+    reader.onloadend = function () {
+      var base64Image = reader.result.split(',')[1]; // Extract base64 image data
+      formData.imageFile = base64Image;
 
-        var imageFile = document.getElementById('imageFile').files[0];
+      // Disable the submit button while uploading
+      document.getElementById("uploadBtn").disabled = true;
+      document.getElementById("uploadBtn").value = "Uploading...";
 
-        if (!imageFile) {
-          document.getElementById('output').innerHTML = "Please select an image to upload.";
+      // Send the data to Google Apps Script (replace with your correct Web App URL)
+      fetch('https://script.google.com/macros/s/AKfycbz4W_EUapWRvnfBmcW5J6OwcB2kFZYFTbytJCP4tEj4INQl_3pYu2CsKSJ8yrm9Wtf--w/exec', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            document.getElementById('output').innerHTML =
+              'Image uploaded successfully! URL: ' + data.fileUrl;
+            document.getElementById('uploadForm').reset();
+          } else {
+            document.getElementById('output').innerHTML = 'Error: ' + data.error;
+          }
           document.getElementById('output').style.display = "block";
-          return;
-        }
+          document.getElementById("uploadBtn").disabled = false;
+          document.getElementById("uploadBtn").value = "Upload";
+        })
+        .catch((error) => {
+          document.getElementById('output').innerHTML = 'Error: ' + error.message;
+          document.getElementById('output').style.display = "block";
+          document.getElementById("uploadBtn").disabled = false;
+          document.getElementById("uploadBtn").value = "Upload";
+        });
+    };
 
-        var reader = new FileReader();
-        reader.onloadend = function () {
-          var base64Image = reader.result.split(',')[1];
-          formData.imageFile = base64Image;
+    reader.readAsDataURL(imageFile);
+  };
+</script>
 
-          // Disable the submit button while uploading
-          document.getElementById("uploadBtn").disabled = true;
-          document.getElementById("uploadBtn").value = "Uploading...";
-
-          // Send the data to Google Apps Script (replace with your correct Web App URL)
-          fetch('https://script.google.com/macros/s/AKfycbz4XK29IE3ydoxjd-dlz9LsKQkU4XFiwpw_mrr7X1wnQecStp0fDx3Mg6-0tdCQ7VYR7A/exec', {
-            method: 'POST',
-            body: JSON.stringify(formData),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-              }
-              return response.json();
-            })
-            .then((data) => {
-              if (data.success) {
-                document.getElementById('output').innerHTML =
-                  'Image uploaded successfully! URL: ' + data.fileUrl;
-                document.getElementById('uploadForm').reset();
-              } else {
-                document.getElementById('output').innerHTML = 'Error: ' + data.error;
-              }
-              document.getElementById('output').style.display = "block";
-              document.getElementById("uploadBtn").disabled = false;
-              document.getElementById("uploadBtn").value = "Upload";
-            })
-            .catch((error) => {
-              document.getElementById('output').innerHTML = 'Error: ' + error.message;
-              document.getElementById('output').style.display = "block";
-              document.getElementById("uploadBtn").disabled = false;
-              document.getElementById("uploadBtn").value = "Upload";
-            });
-        };
-
-        reader.readAsDataURL(imageFile);
-      };
-    </script>
   </body>
 </html>
