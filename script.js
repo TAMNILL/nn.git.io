@@ -110,3 +110,30 @@ document.getElementById('stock-out-form').addEventListener('submit', function(ev
     google.script.run.saveStockOutData(stockOutData);
     alert('Stock Out Data Submitted!');
 });
+
+  // Function to show the correct content based on the clicked link
+        function showContent(contentId) {
+            // Hide all content sections
+            const contentSections = document.querySelectorAll('.content');
+            contentSections.forEach(function(section) {
+                section.style.display = 'none';
+            });
+
+            // Show the clicked content section
+            const contentToShow = document.getElementById(contentId);
+            contentToShow.style.display = 'block';
+        }
+
+        // Event listeners for navbar links
+        document.getElementById('stock-in-link').addEventListener('click', function() {
+            showContent('stock-in-content');
+        });
+        document.getElementById('stock-dashboard-link').addEventListener('click', function() {
+            showContent('stock-dashboard-content');
+        });
+        document.getElementById('stock-out-link').addEventListener('click', function() {
+            showContent('stock-out-content');
+        });
+        document.getElementById('claim-details-link').addEventListener('click', function() {
+            showContent('claim-details-content');
+        });
