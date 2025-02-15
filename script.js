@@ -138,30 +138,6 @@ document.getElementById('stock-out-form').addEventListener('submit', function(ev
             showContent('claim-details-content');
         });
 
-  function fetchStockDashboardData() {
-    // Replace with your actual Google Apps Script URL
-    fetch('https://script.google.com/macros/s/AKfycbwN8VKOKZSqKY6pWFQvSI4iv8A51vCfgckElxVG0GJpXQkCY4woJZl9cUiq8yIIzjlvww/exec', {
-        method: 'GET'  // Make sure we're using GET request
-    })
-    .then(response => response.json())
-    .then(data => {
-        var tableBody = document.getElementById('stock-dashboard-table').getElementsByTagName('tbody')[0];
-
-        // Clear existing table rows
-        tableBody.innerHTML = '';
-
-        // Add rows from the fetched data
-        data.forEach(function(item) {
-            var row = tableBody.insertRow();
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            cell1.textContent = item.item;
-            cell2.textContent = item.quantity;
-        });
-    })
-    .catch(error => console.error('Error fetching data:', error));
-}
-
 
         // Event listener for the Stock Dashboard link
         document.getElementById('stock-dashboard-link').addEventListener('click', function() {
