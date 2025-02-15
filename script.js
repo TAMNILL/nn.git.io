@@ -139,25 +139,29 @@ document.getElementById('stock-out-form').addEventListener('submit', function(ev
         });
 
   function fetchStockDashboardData() {
-            fetch('https://script.google.com/macros/s/AKfycbwsyHV5fwnJmvZzt-Ivx8EwQ9kL8RbJLimmMOxtH8TGvlptU0BzRbDfyoFu0F7WPBTF8g/exec')  // Replace with your Apps Script URL
-                .then(response => response.json())
-                .then(data => {
-                    var tableBody = document.getElementById('stock-dashboard-table').getElementsByTagName('tbody')[0];
+    // Replace with your actual Google Apps Script URL
+    fetch('https://script.google.com/macros/s/AKfycbxXEJ-KwNTJFpp1pgt__SsqEFl3PSK3iJCGYO7dup0qgFukO3P0k3Oz0FGZ0rUCtqbaeg/exec', {
+        method: 'GET'  // Make sure we're using GET request
+    })
+    .then(response => response.json())
+    .then(data => {
+        var tableBody = document.getElementById('stock-dashboard-table').getElementsByTagName('tbody')[0];
 
-                    // Clear existing table rows
-                    tableBody.innerHTML = '';
+        // Clear existing table rows
+        tableBody.innerHTML = '';
 
-                    // Add rows from the fetched data
-                    data.forEach(function(item) {
-                        var row = tableBody.insertRow();
-                        var cell1 = row.insertCell(0);
-                        var cell2 = row.insertCell(1);
-                        cell1.textContent = item.item;
-                        cell2.textContent = item.quantity;
-                    });
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
+        // Add rows from the fetched data
+        data.forEach(function(item) {
+            var row = tableBody.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.textContent = item.item;
+            cell2.textContent = item.quantity;
+        });
+    })
+    .catch(error => console.error('Error fetching data:', error));
+}
+
 
         // Event listener for the Stock Dashboard link
         document.getElementById('stock-dashboard-link').addEventListener('click', function() {
