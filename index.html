@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Website Form</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> <!-- Ensure this path is correct -->
 </head>
 <body>
-    <div class="form-container">
-         <nav class="navbar">
+    <!-- Navbar Section -->
+    <nav class="navbar">
         <ul>
             <li><a href="#stock-in">Stock In</a></li>
             <li><a href="#stock-dashboard">Stock Dashboard</a></li>
@@ -16,51 +16,21 @@
             <li><a href="#claim-details">Claim Details</a></li>
         </ul>
     </nav>
+
+    <!-- Form Section -->
+    <div class="form-container">
         <h2>Website Form</h2>
         <form id="website-form" method="POST" action="YOUR_APPS_SCRIPT_URL">
-            <input type="date" id="date" name="date" placeholder="Date">
-            
+            <input type="date" id="date" name="date" placeholder="Date" required>
+
             <!-- Pattern dropdown with manual entry option -->
-            <input type="text" id="pattern" name="pattern" placeholder="Pattern" list="pattern-options">
+            <input type="text" id="pattern" name="pattern" placeholder="Pattern" list="pattern-options" required>
             <datalist id="pattern-options">
                 <option value="11.00 R20 LDR">
                 <option value="11.00 R20 RA1">
                 <option value="11.00 R20 RA">
                 <option value="11.00 R20 MD">
-                <option value="T/L 295/80 R22.5 RA">
-                <option value="T/L 295/80 R22.5 RD">
-                <option value="T/L 235/75 R17.5 RA">
-                <option value="T/L 235/75 R17.5 RD">
-                <option value="T/L 215/75 R17.5 RD">
-                <option value="295/90 R20 MD">
-                <option value="295/90 R20 MD+">
-                <option value="295/90 R20 ENDUTRAX MA">
-                <option value="295/90 R20 RA">
-                <option value="295/90 R20 LD">
-                <option value="295/90 R20 RA(T)">
-                <option value="295/90 R20 MA">
-                <option value="10.00 20 AMAR GOLD">
-                <option value="10.00 20 XT-7 GOLD">
-                <option value="9.00 20 LD">
-                <option value="900 16 TERRA">
-                <option value="8.25 R 20 LD">
-                <option value="8.25 R 20 RA">
-                <option value="8.25 R 20 RA(T)">
-                <option value="8.25 20 Amar Gold">
-                <option value="8.25 20 XT - 7GOLD">
-                <option value="8.25 R16 LD">
-                <option value="8.25 R16 RA">
-                <option value="8.25 16 Vihan Lug">
-                <option value="8.25 16 Vihan Rib">
-                <option value="7.50 R16 LD">
-                <option value="7.50 R16 RA">
-                <option value="7.50 16 VIHAN RIB">
-                <option value="7.00 16 VIHAN RIB">
-                <option value="7.00 16 RA">
-                <option value="7.00 16 VIHAN LUG">
-                <option value="16.9 -28 Y-LON">
-                <option value="13.00-24 ARG217">
-                <option value="Michelin 295/90 R20 Xmulti HDZ">
+                <!-- Add more options here -->
             </datalist>
 
             <input type="text" id="stock-out" name="stock_out" placeholder="Stock Out" value="1">
