@@ -137,3 +137,52 @@ document.getElementById('stock-out-form').addEventListener('submit', function(ev
         document.getElementById('claim-details-link').addEventListener('click', function() {
             showContent('claim-details-content');
         });
+
+  function fetchStockDashboardData() {
+            fetch('https://script.google.com/macros/s/AKfycbwsyHV5fwnJmvZzt-Ivx8EwQ9kL8RbJLimmMOxtH8TGvlptU0BzRbDfyoFu0F7WPBTF8g/exec')  // Replace with your Apps Script URL
+                .then(response => response.json())
+                .then(data => {
+                    var tableBody = document.getElementById('stock-dashboard-table').getElementsByTagName('tbody')[0];
+
+                    // Clear existing table rows
+                    tableBody.innerHTML = '';
+
+                    // Add rows from the fetched data
+                    data.forEach(function(item) {
+                        var row = tableBody.insertRow();
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        cell1.textContent = item.item;
+                        cell2.textContent = item.quantity;
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Event listener for the Stock Dashboard link
+        document.getElementById('stock-dashboard-link').addEventListener('click', function() {
+            showContent('stock-dashboard-content');
+            fetchStockDashboardData();  // Fetch the stock data when the Stock Dashboard is shown
+        });
+
+        // Function to show content (same as earlier)
+        function showContent(contentId) {
+            const contentSections = document.querySelectorAll('.content');
+            contentSections.forEach(function(section) {
+                section.style.display = 'none';
+            });
+            const contentToShow = document.getElementById(contentId);
+            contentToShow.style.display = 'block';
+        }
+
+        // Event listeners for other sections (Stock In, Stock Out, Claim Details)
+        document.getElementById('stock-in-link').addEventListener('click', function() {
+            showContent('stock-in-content');
+        });
+        document.getElementById('stock-out-link').addEventListener('click', function() {
+            showContent('stock-out-content');
+        });
+        document.getElementById('claim-details-link').addEventListener('click', function() {
+            showContent('claim-details-content');
+        });
+    </script>
