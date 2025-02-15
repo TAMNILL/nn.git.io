@@ -45,46 +45,49 @@
         <div id="status"></div>
     </div>
 
-    <script>
-        // Handle form submission
-        document.getElementById('updateForm').addEventListener('submit', function(e) {
-            e.preventDefault();  // Prevent default form submission
+   <script>
+    // Handle form submission
+    document.getElementById('updateForm').addEventListener('submit', function(e) {
+        e.preventDefault();  // Prevent default form submission
 
-            // Collect form data
-            const formData = {
-                date: document.getElementById('date').value,
-                pattern: document.getElementById('pattern').value,
-                stockOut: document.getElementById('stockOut').value,
-                customerName: document.getElementById('customerName').value,
-                vehicleNo: document.getElementById('vehicleNo').value,
-                mobile: document.getElementById('mobile').value,
-                tyreSerialNo: document.getElementById('tyreSerialNo').value,
-                price: document.getElementById('price').value,
-                remarks: document.getElementById('remarks').value,
-                salesValue: document.getElementById('salesValue').value
-            };
+        // Collect form data
+        const formData = {
+            date: document.getElementById('date').value,
+            pattern: document.getElementById('pattern').value,
+            stockOut: document.getElementById('stockOut').value,
+            customerName: document.getElementById('customerName').value,
+            vehicleNo: document.getElementById('vehicleNo').value,
+            mobile: document.getElementById('mobile').value,
+            tyreSerialNo: document.getElementById('tyreSerialNo').value,
+            price: document.getElementById('price').value,
+            remarks: document.getElementById('remarks').value,
+            salesValue: document.getElementById('salesValue').value
+        };
 
-            // Send POST request to Google Apps Script Web App
-            fetch('https://script.google.com/macros/s/AKfycbz_COrMXf4CZzOxRNE1jWtCBBkFrvlkGtO9Y7Rz88VnwlWiVwQPTNp_H-hVoIVPZjbKlA/exec', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.getElementById('status').innerText = 'Form submitted successfully!';
-                    document.getElementById('updateForm').reset();
-                } else {
-                    document.getElementById('status').innerText = 'Error submitting the form.';
-                }
-            })
-            .catch(error => {
-                document.getElementById('status').innerText = 'Error: ' + error.message;
-            });
+        // Send POST request to Google Apps Script Web App
+        fetch('https://script.google.com/macros/s/AKfycbxWhFdo3dVsQV8dRtQIvbuZDHUmLxGGGGBmJU_zh61ltJ_fhyZkUmoHsziqA8JRRn5w4w/exec', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json()) // Parse the JSON response
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('status').innerText = 'Form submitted successfully!';
+                document.getElementById('updateForm').reset();
+            } else {
+                // Display the error message
+                document.getElementById('status').innerText = 'Error: ' + (data.message || 'Unknown error');
+            }
+        })
+        .catch(error => {
+            // Display the error message
+            document.getElementById('status').innerText = 'Error: ' + error.message;
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>
