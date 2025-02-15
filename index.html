@@ -3,135 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Name, Age, and Image Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        .form-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-        h2 {
-            text-align: center;
-        }
-        input[type="text"], input[type="number"], input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: red;
-            font-size: 14px;
-        }
-    </style>
+    <title>Google Sheets Update Form</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="form-container">
-        <h2>Enter Your Details</h2>
-        <form id="nameAgeForm" enctype="multipart/form-data">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" required>
+        <h2>Update Stock Information</h2>
+        <form id="updateForm">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required><br><br>
 
-            <label for="image">Upload Image:</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
+            <label for="pattern">Pattern:</label>
+            <input type="text" id="pattern" name="pattern" required><br><br>
+
+            <label for="stockOut">Stock Out:</label>
+            <input type="number" id="stockOut" name="stockOut" required><br><br>
+
+            <label for="customerName">Customer Name:</label>
+            <input type="text" id="customerName" name="customerName" required><br><br>
+
+            <label for="vehicleNo">Vehicle No:</label>
+            <input type="text" id="vehicleNo" name="vehicleNo" required><br><br>
+
+            <label for="mobile">Mobile:</label>
+            <input type="text" id="mobile" name="mobile" required><br><br>
+
+            <label for="tyreSerialNo">Tyre Serial No:</label>
+            <input type="text" id="tyreSerialNo" name="tyreSerialNo" required><br><br>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" required><br><br>
+
+            <label for="remarks">Remarks:</label>
+            <textarea id="remarks" name="remarks"></textarea><br><br>
+
+            <label for="salesValue">Sales Value:</label>
+            <input type="number" id="salesValue" name="salesValue" required><br><br>
 
             <button type="submit">Submit</button>
         </form>
-        <p id="error-message" class="error"></p>
+        <div id="status"></div>
     </div>
 
-    <script>
-        // Handle form submission
-        document.getElementById('nameAgeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Get the form data
-            var name = document.getElementById('name').value;
-            var age = document.getElementById('age').value;
-            var imageFile = document.getElementById('image').files[0];
-
-            // Simple validation
-            if (!name || !age || isNaN(age) || !imageFile) {
-                document.getElementById('error-message').textContent = "Please enter valid name, age, and select an image.";
-                return;
-            }
-
-            // Clear any previous error message
-            document.getElementById('error-message').textContent = "";
-
-            // Log form data to help with debugging
-            console.log("Form data:", { name, age, imageFile });
-
-            // Convert image to base64 string for submission
-            var reader = new FileReader();
-            reader.onload = function(event) {
-                var imageBase64 = event.target.result.split(',')[1];  // Extract base64 string
-
-                // Log the base64 string length for debugging (don't log large strings)
-                console.log("Base64 Image String Length: ", imageBase64.length);
-
-                // Send data to Google Apps Script using fetch
-                var requestData = {
-                    name: name,
-                    age: age,
-                    imageBase64: imageBase64
-                };
-
-                // Log the request data being sent
-                console.log("Sending Data:", requestData);
-
-                fetch('https://script.google.com/macros/s/AKfycbzp_jaJnKLhpPv6xW9vOeMRckIsqesSTTVMCD6Z1sAI-fMVCyXNAO32h24xrOHZWinLzw/exec', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(requestData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Response from server:", data);  // Log the response for better debugging
-
-                    if (data.success) {
-                        alert("Data submitted successfully!");
-                    } else {
-                        alert("Error: " + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("Error submitting data.");
-                });
-            };
-
-            reader.readAsDataURL(imageFile); // Convert image to base64
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
