@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var formData = new FormData(form);
 
         // Send the form data to the Apps Script URL using fetch
-        fetch('https://script.google.com/macros/s/AKfycbyWFULMW0L0OZdPOrMZkPp8vgLSaNlbjnfNSHlsZQ751cymuTKRxqdbZpoenUUmpJp-7w/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbz0TOJEIu5NDhIB6cvKb0YbJzRsghjUm4MwumbAeZon39G5NSc_VYNfQcLRveWOlXiFIg/exec', {
             method: 'POST',
             body: formData
         })
