@@ -140,7 +140,7 @@ document.getElementById('stock-out-form').addEventListener('submit', function(ev
 
   function fetchStockDashboardData() {
     // Replace with your actual Google Apps Script URL
-    fetch('https://script.google.com/macros/s/AKfycbxXEJ-KwNTJFpp1pgt__SsqEFl3PSK3iJCGYO7dup0qgFukO3P0k3Oz0FGZ0rUCtqbaeg/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbwN8VKOKZSqKY6pWFQvSI4iv8A51vCfgckElxVG0GJpXQkCY4woJZl9cUiq8yIIzjlvww/exec', {
         method: 'GET'  // Make sure we're using GET request
     })
     .then(response => response.json())
