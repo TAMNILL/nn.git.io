@@ -7,27 +7,12 @@
     <link rel="stylesheet" href="style.css"> <!-- Ensure this path is correct -->
 </head>
 <body>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Form</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
- 
+   
+    </div>
+
+    <!-- Website Form -->
     <div class="form-container">
-      <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Form</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Navbar Section -->
+         <!-- Navbar Section -->
     <nav class="navbar">
         <ul>
             <li><a href="#" id="stock-in-link">Stock In</a></li>
@@ -71,14 +56,6 @@
         <h2>Claim Details</h2>
         <!-- Add your content for Claim Details here -->
         <p>Claim Details content will be displayed here.</p>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
-
-
-    <!-- Form Section -->
         <h2>Website Form</h2>
         <form id="website-form" method="POST" action="YOUR_APPS_SCRIPT_URL">
             <input type="date" id="date" name="date" placeholder="Date" required>
@@ -107,5 +84,33 @@
     </div>
     
     <script src="script.js"></script>
+    <script>
+        // Function to show the correct content based on the clicked link
+        function showContent(contentId) {
+            // Hide all content sections
+            const contentSections = document.querySelectorAll('.content');
+            contentSections.forEach(function(section) {
+                section.style.display = 'none';
+            });
+
+            // Show the clicked content section
+            const contentToShow = document.getElementById(contentId);
+            contentToShow.style.display = 'block';
+        }
+
+        // Event listeners for navbar links
+        document.getElementById('stock-in-link').addEventListener('click', function() {
+            showContent('stock-in-content');
+        });
+        document.getElementById('stock-dashboard-link').addEventListener('click', function() {
+            showContent('stock-dashboard-content');
+        });
+        document.getElementById('stock-out-link').addEventListener('click', function() {
+            showContent('stock-out-content');
+        });
+        document.getElementById('claim-details-link').addEventListener('click', function() {
+            showContent('claim-details-content');
+        });
+    </script>
 </body>
 </html>
