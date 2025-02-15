@@ -13,7 +13,7 @@ document.getElementById('website-form').addEventListener('submit', function(even
     formData.append("message", message);
 
     // Send the data to Apps Script using fetch
-    fetch('https://script.google.com/macros/s/AKfycbzsjL1Gy8wzS4bqmzERzRE_z-h_1gjThJECvgK-VO3uhOfrQSKVZAWHyL1YU4zysK2UUQ/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbyUgEZCL3f3G6lel6KkVOKgclbmLNmUj8wWp5DaZqo6ZiiqnhyTQo8Wp9rf1foYxKfeFA/exec', {
         method: 'POST',
         body: formData
     })
