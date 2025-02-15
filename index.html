@@ -7,15 +7,60 @@
     <link rel="stylesheet" href="style.css"> <!-- Ensure this path is correct -->
 </head>
 <body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
     <!-- Navbar Section -->
     <nav class="navbar">
         <ul>
-            <li><a href="#stock-in">Stock In</a></li>
-            <li><a href="#stock-dashboard">Stock Dashboard</a></li>
-            <li><a href="#stock-out">Stock Out</a></li>
-            <li><a href="#claim-details">Claim Details</a></li>
+            <li><a href="#" id="stock-in-link">Stock In</a></li>
+            <li><a href="#" id="stock-dashboard-link">Stock Dashboard</a></li>
+            <li><a href="#" id="stock-out-link">Stock Out</a></li>
+            <li><a href="#" id="claim-details-link">Claim Details</a></li>
         </ul>
     </nav>
+
+    <!-- Stock In Section -->
+    <div class="content" id="stock-in-content" style="display:none;">
+        <h2>Stock In</h2>
+        <form id="stock-in-form">
+            <!-- Add your form fields for Stock In here -->
+            <input type="text" id="stock-in-item" name="stock_in_item" placeholder="Item" required>
+            <input type="number" id="stock-in-quantity" name="stock_in_quantity" placeholder="Quantity" required>
+            <button type="submit" id="stock-in-submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Stock Dashboard Section -->
+    <div class="content" id="stock-dashboard-content" style="display:none;">
+        <h2>Stock Dashboard</h2>
+        <!-- Add your content or data for Stock Dashboard here -->
+        <p>Stock Dashboard content will be displayed here.</p>
+    </div>
+
+    <!-- Stock Out Section -->
+    <div class="content" id="stock-out-content" style="display:none;">
+        <h2>Stock Out</h2>
+        <form id="stock-out-form">
+            <!-- Add your form fields for Stock Out here -->
+            <input type="text" id="stock-out-item" name="stock_out_item" placeholder="Item" required>
+            <input type="number" id="stock-out-quantity" name="stock_out_quantity" placeholder="Quantity" required>
+            <button type="submit" id="stock-out-submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Claim Details Section -->
+    <div class="content" id="claim-details-content" style="display:none;">
+        <h2>Claim Details</h2>
+        <!-- Add your content for Claim Details here -->
+        <p>Claim Details content will be displayed here.</p>
+    </div>
 
     <!-- Form Section -->
     <div class="form-container">
