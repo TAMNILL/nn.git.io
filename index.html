@@ -65,28 +65,26 @@
         };
 
         // Send POST request to Google Apps Script Web App
-        fetch('https://script.google.com/macros/s/AKfycbxWhFdo3dVsQV8dRtQIvbuZDHUmLxGGGGBmJU_zh61ltJ_fhyZkUmoHsziqA8JRRn5w4w/exec', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json()) // Parse the JSON response
-        .then(data => {
-            if (data.status === 'success') {
-                document.getElementById('status').innerText = 'Form submitted successfully!';
-                document.getElementById('updateForm').reset();
-            } else {
-                // Display the error message
-                document.getElementById('status').innerText = 'Error: ' + (data.message || 'Unknown error');
-            }
-        })
-        .catch(error => {
-            // Display the error message
-            document.getElementById('status').innerText = 'Error: ' + error.message;
-        });
-    });
+       fetch('https://script.google.com/macros/s/AKfycby5bsyYN6Lo4oq5B5plC0aB714ekp0kCjOSIZXyg2SvJGkodffZjriuxzYJ_vKMvAyXDA/exec', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData)
+})
+.then(response => response.json())  // Parse the JSON response
+.then(data => {
+    if (data.status === 'success') {
+        document.getElementById('status').innerText = 'Form submitted successfully!';
+        document.getElementById('updateForm').reset();
+    } else {
+        document.getElementById('status').innerText = 'Error: ' + (data.message || 'Unknown error');
+    }
+})
+.catch(error => {
+    document.getElementById('status').innerText = 'Error: ' + error.message;
+});
+
 </script>
 
 </body>
