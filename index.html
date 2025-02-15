@@ -10,10 +10,10 @@
     <div class="form-container">
         <h2>Website Form</h2>
         <form id="website-form" method="POST" action="YOUR_APPS_SCRIPT_URL">
-            <input type="date" id="date" name="date" placeholder="Date" required>
-
+            <input type="date" id="date" name="date" placeholder="Date">
+            
             <!-- Pattern dropdown with manual entry option -->
-            <input type="text" id="pattern" name="pattern" placeholder="Pattern" list="pattern-options" required>
+            <input type="text" id="pattern" name="pattern" placeholder="Pattern" list="pattern-options">
             <datalist id="pattern-options">
                 <option value="11.00 R20 LDR">
                 <option value="11.00 R20 RA1">
@@ -55,14 +55,14 @@
                 <option value="Michelin 295/90 R20 Xmulti HDZ">
             </datalist>
 
-            <input type="text" id="stock-out" name="stock_out" placeholder="Stock Out" required>
-            <input type="text" id="customer-name" name="customer_name" placeholder="Customer Name" required>
-            <input type="text" id="vehicle-no" name="vehicle_no" placeholder="Vehicle No" required>
-            <input type="tel" id="mobile" name="mobile" placeholder="Mobile" required>
-            <input type="text" id="tyre-serial-no" name="tyre_serial_no" placeholder="Tyre Serial No" required>
-            <input type="number" id="price" name="price" placeholder="Price" required>
-            <textarea id="remarks" name="remarks" placeholder="Remarks" required></textarea>
-            <input type="number" id="sales-value" name="sales_value" placeholder="Sales Value" required>
+            <input type="text" id="stock-out" name="stock_out" placeholder="Stock Out" value="1">
+            <input type="text" id="customer-name" name="customer_name" placeholder="Customer Name">
+            <input type="text" id="vehicle-no" name="vehicle_no" placeholder="Vehicle No">
+            <input type="tel" id="mobile" name="mobile" placeholder="Mobile">
+            <input type="text" id="tyre-serial-no" name="tyre_serial_no" placeholder="Tyre Serial No">
+            <input type="number" id="price" name="price" placeholder="Price">
+            <textarea id="remarks" name="remarks" placeholder="Remarks"></textarea>
+            <input type="number" id="sales-value" name="sales_value" placeholder="Sales Value">
             <button type="submit" id="submit-button">Submit</button>
             <div id="loading-indicator" style="display: none;">Submitting...</div>
         </form>
