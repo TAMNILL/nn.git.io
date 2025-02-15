@@ -1,8 +1,8 @@
-document.getElementById("updateForm").addEventListener("submit", function (event) {
-    event.preventDefault();
+ document.getElementById("updateForm").addEventListener("submit", function (event) {
+      event.preventDefault();
 
-    // Get form values
-    const formData = {
+      // Get form data
+      const formData = {
         date: document.getElementById("date").value,
         pattern: document.getElementById("pattern").value,
         stockOut: document.getElementById("stockOut").value,
@@ -13,30 +13,29 @@ document.getElementById("updateForm").addEventListener("submit", function (event
         price: document.getElementById("price").value,
         remarks: document.getElementById("remarks").value,
         salesValue: document.getElementById("salesValue").value
-    };
+      };
 
-    // Prepare data to send via POST request
-    const url = "https://script.google.com/macros/s/AKfycbzJ0Tl8mvK7vgNlzVF8JBO0jIRCzMWNwmh9T5YpyF8RZh7bI5s2VW89KsqCSelb5m9ikw/exec";
+      // Send the data to Google Apps Script using fetch
+      const url = "https://script.google.com/macros/s/AKfycbxIDspQE2DAF0Jr4xAsiLDwgmcm4s0_8a6uPK5p2vnQK3jsAsHgQ-NoAYQSx4uQHMx2zw/exec";  // Replace with your web app URL
 
-    fetch(url, {
+      fetch(url, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(formData)
-    })
-    .then(response => response.json())  // Convert the response to JSON
-    .then(data => {
-        console.log("Response from server:", data); // Log the response
+      })
+      .then(response => response.json())
+      .then(data => {
         if (data.result === "Success") {
-            document.getElementById("status").innerText = "Data updated successfully!";
-            document.getElementById("updateForm").reset();
+          document.getElementById("status").innerText = "Data updated successfully!";
+          document.getElementById("updateForm").reset();
         } else {
-            document.getElementById("status").innerText = `Error: ${data.message}`;
+          document.getElementById("status").innerText = `Error: ${data.message}`;
         }
-    })
-    .catch(error => {
-        console.error("Error:", error);  // Log any error to the console
+      })
+      .catch(error => {
+        console.error("Error:", error);
         document.getElementById("status").innerText = "Error updating data.";
+      });
     });
-});
