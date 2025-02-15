@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Set today's date as the default value for the 'date' field
+    var today = new Date();
+    var dateInput = document.getElementById('date');
+    var formattedDate = today.toISOString().split('T')[0]; // Format date to YYYY-MM-DD
+    dateInput.value = formattedDate; // Set today's date in the input
+
+    // Set default value for 'stock-out'
+    var stockOutInput = document.getElementById('stock-out');
+    stockOutInput.value = '1'; // Default value for stock-out
+
     var form = document.getElementById('website-form');
     var submitButton = document.getElementById('submit-button');
     var loadingIndicator = document.getElementById('loading-indicator');
