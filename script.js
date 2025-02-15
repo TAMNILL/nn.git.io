@@ -16,7 +16,7 @@ document.getElementById("updateForm").addEventListener("submit", function (event
     };
 
     // Prepare data to send via POST request
-    const url = "https://script.google.com/macros/s/AKfycbyAz36pesG4S8DRxz_pqmbWRBM7F92vmQh8VrX8wS1-fshnvRTVRraJqREw6-AIEium5g/exec";
+    const url = "https://script.google.com/macros/s/AKfycbzJ0Tl8mvK7vgNlzVF8JBO0jIRCzMWNwmh9T5YpyF8RZh7bI5s2VW89KsqCSelb5m9ikw/exec";
 
     fetch(url, {
         method: "POST",
@@ -25,13 +25,18 @@ document.getElementById("updateForm").addEventListener("submit", function (event
         },
         body: JSON.stringify(formData)
     })
-    .then(response => response.json())
+    .then(response => response.json())  // Convert the response to JSON
     .then(data => {
-        document.getElementById("status").innerText = "Data updated successfully!";
-        document.getElementById("updateForm").reset();
+        console.log("Response from server:", data); // Log the response
+        if (data.result === "Success") {
+            document.getElementById("status").innerText = "Data updated successfully!";
+            document.getElementById("updateForm").reset();
+        } else {
+            document.getElementById("status").innerText = `Error: ${data.message}`;
+        }
     })
     .catch(error => {
+        console.error("Error:", error);  // Log any error to the console
         document.getElementById("status").innerText = "Error updating data.";
-        console.error("Error:", error);
     });
 });
