@@ -60,3 +60,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Event listeners to switch between sections
+document.getElementById('stock-in-link').addEventListener('click', function() {
+    showSection('stock-in-content');
+});
+document.getElementById('stock-dashboard-link').addEventListener('click', function() {
+    showSection('stock-dashboard-content');
+});
+document.getElementById('stock-out-link').addEventListener('click', function() {
+    showSection('stock-out-content');
+});
+document.getElementById('claim-details-link').addEventListener('click', function() {
+    showSection('claim-details-content');
+});
+
+// Show the selected content and hide others
+function showSection(sectionId) {
+    const sections = document.querySelectorAll('.content');
+    sections.forEach(function(section) {
+        section.style.display = 'none';
+    });
+
+    document.getElementById(sectionId).style.display = 'block';
+}
+
+// Stock In Form Submission
+document.getElementById('stock-in-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const stockInData = {
+        item: document.getElementById('stock-in-item').value,
+        quantity: document.getElementById('stock-in-quantity').value
+    };
+
+    // Call Google Apps Script to save to Sheet2
+    google.script.run.saveStockInData(stockInData);
+    alert('Stock In Data Submitted!');
+});
+
+// Stock Out Form Submission
+document.getElementById('stock-out-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const stockOutData = {
+        item: document.getElementById('stock-out-item').value,
+        quantity: document.getElementById('stock-out-quantity').value
+    };
+
+    // Call Google Apps Script to save to Sheet3
+    google.script.run.saveStockOutData(stockOutData);
+    alert('Stock Out Data Submitted!');
+});
