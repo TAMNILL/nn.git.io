@@ -110,3 +110,8 @@ document.getElementById('stock-out-form').addEventListener('submit', function(ev
     google.script.run.saveStockOutData(stockOutData);
     alert('Stock Out Data Submitted!');
 });
+
+    // Call Google Apps Script to save to Sheet3
+    google.script.run.saveStockOutData(stockOutData);
+    alert('Stock Out Data Submitted!');
+});
