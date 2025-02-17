@@ -1,144 +1,150 @@
+// DOMContentLoaded Event Listener
 document.addEventListener('DOMContentLoaded', function() {
-    // Set today's date as the default value for the 'date' field
-    var today = new Date();
-    var dateInput = document.getElementById('date');
-    var formattedDate = today.toISOString().split('T')[0]; // Format date to YYYY-MM-DD
-    dateInput.value = formattedDate; // Set today's date in the input
+    // Set today's date as the default value for date inputs
+    const today = new Date().toISOString().split('T')[0];
 
-    // Set default value for 'stock-out'
-    var stockOutInput = document.getElementById('stock-out');
-    stockOutInput.value = '1'; // Default value for stock-out
-
-    var form = document.getElementById('website-form');
-    var submitButton = document.getElementById('submit-button');
-    var loadingIndicator = document.getElementById('loading-indicator');
-    
-    form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        // Disable the submit button and change its color
-        submitButton.disabled = true;
-        submitButton.style.backgroundColor = '#ccc'; // Change button color
-        submitButton.style.cursor = 'not-allowed'; // Change cursor to indicate it's disabled
-
-        // Show loading indicator
-        loadingIndicator.style.display = 'block';
-
-        // Collect form data
-        var formData = new FormData(form);
-
-        // Send the form data to the Apps Script URL using fetch
-        fetch('https://script.google.com/macros/s/AKfycbx2XFIj8XUpFSJ8yYP3t1iuXXwZCcp08G0xLyt61Q_Qha55BcK2z3em63rJZA-vR4tukQ/exec', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            // Hide loading indicator after the request completes
-            loadingIndicator.style.display = 'none';
-
-            // Provide feedback to the user
-            alert('Form submitted successfully!');
-
-            // Reset form after submission
-            form.reset();
-
-            // Enable the submit button again
-            submitButton.disabled = false;
-            submitButton.style.backgroundColor = '#4CAF50'; // Reset button color
-            submitButton.style.cursor = 'pointer'; // Reset cursor
-        })
-        .catch(error => {
-            // Hide loading indicator and provide feedback on error
-            loadingIndicator.style.display = 'none';
-            alert('Error: ' + error);
-
-            // Enable the submit button again in case of an error
-            submitButton.disabled = false;
-            submitButton.style.backgroundColor = '#4CAF50';
-            submitButton.style.cursor = 'pointer';
-        });
-    });
-});
-
-// Event listeners to switch between sections
-document.getElementById('stock-in-link').addEventListener('click', function() {
-    showSection('stock-in-content');
-});
-document.getElementById('stock-dashboard-link').addEventListener('click', function() {
-    showSection('stock-dashboard-content');
-});
-document.getElementById('stock-out-link').addEventListener('click', function() {
-    showSection('stock-out-content');
-});
-document.getElementById('claim-details-link').addEventListener('click', function() {
-    showSection('claim-details-content');
-});
-
-// Show the selected content and hide others
-function showSection(sectionId) {
-    const sections = document.querySelectorAll('.content');
-    sections.forEach(function(section) {
-        section.style.display = 'none';
+    // Apply today's date to all date inputs in the Stock-In and Claim-Tyres forms
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        input.value = today;
     });
 
-    document.getElementById(sectionId).style.display = 'block';
-}
+    // Handle navbar item clicks to show the corresponding form section
+    handleNavbarClicks();
 
-// Stock In Form Submission
-document.getElementById('stock-in-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const stockInData = {
-        item: document.getElementById('stock-in-item').value,
-        quantity: document.getElementById('stock-in-quantity').value
-    };
+    // Set default to show Stock-In form section on page load
+    document.querySelector('.nav-item[data-target="stock-in"]').click();
 
-    // Call Google Apps Script to save to Sheet2
-    google.script.run.saveStockInData(stockInData);
-    alert('Stock In Data Submitted!');
+    // Initialize the form submission handler
+    handleFormSubmission();
 });
 
-// Stock Out Form Submission
-document.getElementById('stock-out-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const stockOutData = {
-        item: document.getElementById('stock-out-item').value,
-        quantity: document.getElementById('stock-out-quantity').value
-    };
+// Navbar Item Click Handling
+function handleNavbarClicks() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const formSections = document.querySelectorAll('.form-section');
 
-    // Call Google Apps Script to save to Sheet3
-    google.script.run.saveStockOutData(stockOutData);
-    alert('Stock Out Data Submitted!');
-});
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const targetSection = this.getAttribute('data-target');
 
-  // Function to show the correct content based on the clicked link
-        function showContent(contentId) {
-            // Hide all content sections
-            const contentSections = document.querySelectorAll('.content');
-            contentSections.forEach(function(section) {
+            // Hide all form sections
+            formSections.forEach(section => {
                 section.style.display = 'none';
             });
 
-            // Show the clicked content section
-            const contentToShow = document.getElementById(contentId);
-            contentToShow.style.display = 'block';
-        }
+            // Show the selected form section
+            document.getElementById(targetSection).style.display = 'block';
 
-        // Event listeners for navbar links
-        document.getElementById('stock-in-link').addEventListener('click', function() {
-            showContent('stock-in-content');
+            // Add active class to the clicked navbar item
+            navItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
         });
-        document.getElementById('stock-dashboard-link').addEventListener('click', function() {
-            showContent('stock-dashboard-content');
+    });
+}
+
+// Form Submission Handler
+// Form Submission Handler
+function handleFormSubmission() {
+    const dataForm = document.getElementById("data-form");
+
+    dataForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        // Show loading indicator
+        document.getElementById("loading").style.display = "flex";
+
+        // Collect form data
+        var formData = new FormData(this);
+        var data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
         });
-        document.getElementById('stock-out-link').addEventListener('click', function() {
-            showContent('stock-out-content');
+
+        // Add the form type based on the active navbar item
+        const activeNavItem = document.querySelector('.nav-item.active');
+        const formType = activeNavItem ? activeNavItem.getAttribute('data-target') : '';
+        data['type'] = formType; // 'stock-in', 'stock-out', or 'claim-tyre'
+
+
+
+        
+        // Send data to the backend using fetch
+        fetch("https://script.google.com/macros/s/AKfycbw4JJ1kIbbLqq7QaMEUoajfCCta7zakV-k4yuFprMBRBJySczUNjty3XD5F4JmYRIBy/exec", {
+            method: "POST",
+            body: new URLSearchParams(data),
+        })
+        .then(response => {
+            console.log("Response:", response);
+            return response.text();
+        })
+        .then(responseText => {
+            console.log("Response Text:", responseText);
+            document.getElementById("response").textContent = responseText;
+        
+            // Hide loading indicator
+            document.getElementById("loading").style.display = "none";
+        
+            // Reset the form after successful submission
+            dataForm.reset();
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("response").textContent = "Error submitting data!";
+            document.getElementById("loading").style.display = "none";
         });
-        document.getElementById('claim-details-link').addEventListener('click', function() {
-            showContent('claim-details-content');
+        
+    });
+}
+
+
+// Function to Format Date to dd/mm/yyyy
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-based
+    const year = date.getFullYear();
+    
+    return ${day} -${month} -${year};
+}
+
+// Dashboard Data Fetching Function
+function fetchGoogleSheetData() {
+    const sheetUrl = "https://script.google.com/macros/s/AKfycbyr4zgPO-14_I1CnKo7PB37qonI9V-e26WkIkaYA3kryP0t9AtRmh-oOuC2K8wEPa8/exec";
+
+    // Fetch data from Google Sheets
+    fetch(sheetUrl)
+        .then(response => response.json())
+        .then(data => {
+            const entries = data.feed.entry;
+            let tableHTML = '<table class="dashboard-table"><thead><tr>';
+
+            // Extract headers from the first entry
+            for (let key in entries[0]) {
+                if (key.startsWith('gsx$')) { // Fields from Google Sheets start with "gsx$"
+                    tableHTML += <th>${key.replace('gsx$', '').toUpperCase()}</th>;
+                }
+            }
+            tableHTML += '</tr></thead><tbody>';
+
+            // Loop through the entries and create table rows
+            entries.forEach(entry => {
+                tableHTML += '<tr>';
+                for (let key in entry) {
+                    if (key.startsWith('gsx$')) {
+                        tableHTML += <td>${entry[key]['$t']}</td>;
+                    }
+                }
+                tableHTML += '</tr>';
+            });
+
+            tableHTML += '</tbody></table>';
+
+            // Insert the table into the dashboard content area
+            document.getElementById('dashboard-content').innerHTML = tableHTML;
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            document.getElementById('dashboard-content').innerHTML = '<p>Unable to load data. Please try again later.</p>';
         });
-
-
-
-
-                
+}
