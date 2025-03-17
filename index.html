@@ -1,72 +1,363 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form Submission</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Include Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Form</title>
+    <style>
+        /* Mobile responsive layout */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            position: relative;
+        }
+
+        /* Watermark styles */
+        body::before {
+            content: "NELLAI RRB ";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem; /* Large size */
+            color: rgba(0, 128, 0, 0.3); /* Light green color */
+            font-weight: bold;
+            letter-spacing: 3px;
+            z-index: -1; /* Behind all content */
+            opacity: 0.3; /* Initial opacity */
+            animation: watermarkAnimation 5s ease-in-out forwards;
+            white-space: nowrap;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        /* Watermark animation */
+        @keyframes watermarkAnimation {
+            0% {
+                opacity: 0.3;
+                font-size: 6rem;
+                color: rgba(0, 128, 0, 0.3);
+            }
+            50% {
+                opacity: 0.7;
+                font-size: 7rem;
+                color: rgba(0, 128, 0, 0.5);
+            }
+            100% {
+                opacity: 1;
+                font-size: 4rem; /* Smaller size */
+                color: grey; /* Grey color */
+            }
+        }
+
+        /* Repeat watermark text across the page */
+        body::after {
+            content: "NELLAI RRB ";
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            color: rgba(0, 128, 0, 0.3);
+            font-weight: bold;
+            letter-spacing: 3px;
+            z-index: -1;
+            opacity: 0.3;
+            animation: watermarkAnimation 5s ease-in-out forwards;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Centered h2 and h3 text styles */
+        h2, h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        h2 {
+            margin-top: 50px;
+            font-size: 3rem;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        /* Animation for fadeIn effect */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Light Green Color for Correct Option dropdown */
+        select {
+            background-color: #e3f9e5; /* Light green background */
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            form {
+                padding: 15px;
+            }
+
+            input[type="submit"] {
+                width: 100%;
+            }
+        }
+
+        /* Popup styles */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 18px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Animation for popup fade-in */
+        #popup.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Correct Option and Hint Icon Container */
+        .correct-option-hint {
+            display: flex;
+            align-items: center; /* Vertically aligns items */
+            gap: 10px; /* Adds space between the dropdown and the hint icon */
+        }
+
+        /* Hint Icon style */
+        .hint-icon {
+            display: inline-block;
+            font-size: 18px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        /* Hint input area - hidden by default */
+        .hint-input {
+            display: none;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Loading Spinner */
+       #loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 18px;
+            color: #4CAF50;
+        }
+
+        #loading img {
+            width: 50px;
+            height: 50px;
+        }
+
+    </style>
 </head>
 <body>
-  <div class="form-container">
-    <nav class="navbar">
-      <ul>
-        <li><a href="https://tamnill.github.io/stocks.git.io/" class="nav-item" data-target="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li><a href="#" class="nav-item" data-target="stock-out"><i class="fas fa-box"></i> Stock-Out</a></li>
-        <li><a href="#" class="nav-item" data-target="stock-in"><i class="fas fa-truck"></i> Stock-In</a></li>
-      </ul>
-    </nav>
 
-    <form id="data-form">
-      <h2>Form Submission</h2>
+    <h3>NELLAI RRB</h3>
+    <h3>Make a Questions</h3>
 
-      <!-- Dashboard Section -->
-      <div id="dashboard" class="form-section">
-        <p>Dashboard Section</p>
-      </div>
+    <form id="quizForm">
+        <!-- Question Category dropdown -->
+        <select id="category" name="category" required>
+            <option value="">Select Category</option>
+            <option value="Aptitude">Aptitude</option>
+            <option value="Reasoning">Reasoning</option>
+            <option value="Science">Science</option>
+            <option value="General Awareness">General Awareness</option>
+        </select><br><br>
 
-      <!-- Stock Out Form -->
-      <div id="stock-out" class="form-section">
-        <input type="date" id="date" name="date" placeholder="Select Date">
-        <input type="text" id="pattern" name="pattern" placeholder="Enter Pattern">
-        <input type="number" id="stock_out" name="stock_out" placeholder="Enter Stock Out">
-        <input type="text" id="customer_name" name="customer_name" placeholder="Enter Customer Name">
-        <input type="text" id="vehicle_no" name="vehicle_no" placeholder="Enter Vehicle No">
-        <input type="tel" id="mobile" name="mobile" placeholder="Enter Mobile Number">
-        <input type="text" id="tyre_serial_no" name="tyre_serial_no" placeholder="Enter Tyre Serial No">
-        <input type="number" id="price" name="price" placeholder="Enter Price">
-        <textarea id="remarks" name="remarks" placeholder="Enter Remarks"></textarea>
-        <input type="number" id="sales_value" name="sales_value" placeholder="Enter Sales Value">
-      </div>
+        <!-- Question input with placeholder -->
+        <input type="text" id="question" name="question" placeholder="Enter your question" required><br><br>
 
-    <!-- Stock In Form -->
-    <div id="stock-in" class="form-section" style="display:none;">
-      <h3>Stock-In Form</h3>
+        <!-- Option A input with default value -->
+        <input type="text" id="optionA" name="optionA" placeholder="Option A" value="A) " required><br><br>
 
-      <!-- Default Date (today) -->
-      <input type="date" id="date_stock_in" name="date_stock_in" placeholder="Select Date" value="" class="form-control">
-      
-      <input type="text" id="vehicle_no_stock_in" name="vehicle_no_stock_in" placeholder="Enter Vehicle No (Stock In)" class="form-control">
-      
-      <input type="number" id="quantity_in" name="quantity_in" placeholder="Enter Quantity (Stock In)" class="form-control">
-      
-      <button type="submit" class="submit-btn">Submit Stock-In</button>
+        <!-- Option B input with default value -->
+        <input type="text" id="optionB" name="optionB" placeholder="Option B" value="B) " required><br><br>
+
+        <!-- Option C input with default value -->
+        <input type="text" id="optionC" name="optionC" placeholder="Option C" value="C) " required><br><br>
+
+        <!-- Option D input with default value -->
+        <input type="text" id="optionD" name="optionD" placeholder="Option D" value="D) " required><br><br>
+
+        <!-- Correct Option and Hint Icon -->
+        <div class="correct-option-hint">
+            <select id="correctOption" name="correctOption" required>
+                <option value="">Select Correct Option</option>
+                <option value="A">Option A</option>
+                <option value="B">Option B</option>
+                <option value="C">Option C</option>
+                <option value="D">Option D</option>
+            </select>
+
+            <!-- Hint Icon and Tooltip -->
+            <span class="hint-icon" onclick="toggleHintInput()">?</span>
+        </div>
+        
+        <!-- Hint input area -->
+        <input type="text" id="hintInput" class="hint-input" placeholder="Enter your hint for the correct option"><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <!-- Loading Spinner -->
+    <div id="loading" style="display: none; text-align: center; font-size: 18px; color: #4CAF50;">
+        <span>RRB...</span> <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading" />
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit">Submit</button>
-  </form>
+    <!-- Popup for success message -->
+    <div id="popup">Data saved successfully!</div>
 
-  <!-- Loading Indicator with spinner -->
-  <div id="loading" style="display:none;">
-    <div class="spinner"></div>
-    <p>Submitting... Please wait.</p>
-  </div>
+    <script>
+        // Event listeners to dynamically set the correct option when an option is clicked
+        document.getElementById("optionA").addEventListener("click", function() {
+            document.getElementById("correctOption").value = "A";
+        });
+        document.getElementById("optionB").addEventListener("click", function() {
+            document.getElementById("correctOption").value = "B";
+        });
+        document.getElementById("optionC").addEventListener("click", function() {
+            document.getElementById("correctOption").value = "C";
+        });
+        document.getElementById("optionD").addEventListener("click", function() {
+            document.getElementById("correctOption").value = "D";
+        });
 
-  <div id="response"></div>
-</div>
+        // Toggle the visibility of the hint input
+        function toggleHintInput() {
+            const hintInput = document.getElementById('hintInput');
+            hintInput.style.display = (hintInput.style.display === 'none' || hintInput.style.display === '') ? 'block' : 'none';
+        }
 
-<script src="script.js"></script>
+        // Form submission logic
+        document.getElementById("quizForm").addEventListener("submit", function(event){
+            event.preventDefault();
+
+            // Show loading spinner
+            document.getElementById("loading").style.display = 'block';
+
+            let category = document.getElementById("category").value;
+            let question = document.getElementById("question").value;
+            let optionA = document.getElementById("optionA").value;
+            let optionB = document.getElementById("optionB").value;
+            let optionC = document.getElementById("optionC").value;
+            let optionD = document.getElementById("optionD").value;
+            let correctOption = document.getElementById("correctOption").value;
+            let hint = document.getElementById("hintInput").value;  // Get the hint value
+
+            // Prepare data to send
+            const data = {
+                category: category,
+                question: question,
+                optionA: optionA,
+                optionB: optionB,
+                optionC: optionC,
+                optionD: optionD,
+                correctOption: correctOption,
+                hint: hint  // Include the hint in the data
+            };
+
+            // Send data to Google Apps Script URL
+            fetch('https://script.google.com/macros/s/AKfycbzHEoD-NoJdaS6L4BcHkVGDJGfYrASlsjuyvPAEVghQgDsPiioMeKweiy8fvjz9qAVc/exec', {
+                method: 'POST',
+                body: new URLSearchParams(data),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Hide loading spinner
+                document.getElementById("loading").style.display = 'none';
+
+                // Show popup with fade-in effect
+                let popup = document.getElementById("popup");
+                popup.classList.add("show");
+
+                // Hide the popup after 3 seconds
+                setTimeout(function() {
+                    popup.classList.remove("show");
+                    // Reload the page or do other actions if needed
+                    window.location.reload();
+                }, 3000);
+            })
+            .catch(error => {
+                // Hide loading spinner in case of error
+                document.getElementById("loading").style.display = 'none';
+
+                alert("Error saving data.");
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
 </body>
 </html>
